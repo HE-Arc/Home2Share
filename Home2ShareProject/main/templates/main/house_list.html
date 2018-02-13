@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Houses List - Home2Share{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+
+      <h1 class="display-4">All the houses</h1>
+      <p class="lead text-muted">A list of our magnificent houses to share.</p>
+
+      <hr/>
+
+    	<div class="row">
+
+      {% for house in house_list %}
+
+      <!-- Creating a column for each treasure panel -->
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="{{ house.image.url }}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ house.name }}</h5>
+            <p class="card-text">{{ house.description }}</p>
+            <a href="/house/{{house.id}}/" class="btn btn-primary">Details</a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- if last column in row -->
+      {% if forloop.counter|divisibleby:3 and not forloop.last %}
+        </div><br><div class="row">
+      {% endif %}
+
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

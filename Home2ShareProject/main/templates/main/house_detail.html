@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Details | {{ house.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="display-4">{{ house.name }}</h1>
+      <p>{{ house.description }}</p>
+
+      <hr/>
+
+      <img src="{{ house.image.url }}" alt="House picture">
+
+      <h3>Statistics</h3>
+
+      <ul>
+        <li>Country : {{ house.country }}</li>
+        <li>City : {{ house.city }}</li>
+        <li>Street : {{ house.street_name }} {{ house.street_number }}</li>
+        <li>Room : {{ house.room_quantity }}</li>
+        <li>People : {{ house.person_quantity }}</li>
+        <li>Price : {{ house.price }}</li>
+      </ul>
+
+
+    </div>
+  </div>
+</div>
+{% endblock %}
