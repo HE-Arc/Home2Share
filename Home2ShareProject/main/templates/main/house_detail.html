@@ -24,6 +24,9 @@
         <li>Price : {{ house.price }}</li>
       </ul>
 
+      <a href="{% url 'house-update' house.slug_name %}" class="btn btn-success btn-sm">Update</a>
+      <a href="{% url 'house-delete' house.slug_name %}" class="btn btn-warning btn-sm">Delete</a>
+
 
     </div>
   </div>

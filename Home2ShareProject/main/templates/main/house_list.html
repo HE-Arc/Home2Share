@@ -13,6 +13,9 @@
 
       <hr/>
 
+      <a href="{% url 'house-new' %}" class="btn btn-success btn-sm">Add a new house</a>
+
+
     	<div class="row">
 
       {% for house in house_list %}
@@ -24,7 +27,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ house.name }}</h5>
             <p class="card-text">{{ house.description }}</p>
-            <a href="/house/{{house.id}}/" class="btn btn-primary">Details</a>
+            <a href="/house/{{house.slug_name}}/" class="btn btn-primary">Details</a>
           </div>
         </div>
       </div>
