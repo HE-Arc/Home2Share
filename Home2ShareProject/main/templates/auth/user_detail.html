@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %} 
+
+<h1>{{ user.username }}</h1><br>
+
+<div class="row">
+    <div class="col-md-4">
+      <ul>
+        <li>{{ user.username }}</li>
+        <li>{{ user.email }}</li>
+      </ul>
+      <a href="{% url 'user-update' user.username %}" class="btn btn-success btn-sm">Update</a>
+    </div>
+</div>
+{% endblock %}
