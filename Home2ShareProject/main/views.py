@@ -21,10 +21,7 @@ def account_activation_sent(request):
     return render(request, 'registration/account_activation_sent.html', context)
 
 def activate(request, uidb64, token):
-    context={'id' : uidb64[2:-1]}
     try:
-        # pour enlever ce b''
-        uidb64 = uidb64[2:-1]
         uid = urlsafe_base64_decode(uidb64)
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
@@ -55,7 +52,7 @@ class UserCreateView(generic.CreateView):
         message = render_to_string('registration/account_activation_email.html', {
             'user': user,
             'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),
             'token': account_activation_token.make_token(user),
         })
         user.email_user(subject, message)
