@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path , include
 from . import views
 
 # Used for the local image hack
@@ -9,8 +9,9 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('', views.index, name = 'index'),
-    path('login/', views.LoginView.as_view(), name='Login'),
-    path('logout/', views.logout_view, name='Logout'),
+    path('user/', include('django.contrib.auth.urls')),
+    #path('login/', views.LoginView.as_view(), name='Login'),
+    #path('logout/', views.logout_view, name='Logout'),
     path('user/<slug>/', views.ProfileView.as_view(), name='profile'),
     path('user/<slug>/update', views.UpdateUserView.as_view(), name='user-update'),
     path('register/',views.UserCreateView.as_view(),name='register'),
