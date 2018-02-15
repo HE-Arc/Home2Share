@@ -58,7 +58,6 @@ class UserCreateView(generic.CreateView):
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
         })
-        print(urlsafe_base64_encode(user.pk))
         user.email_user(subject, message)
         return super().form_valid(form)
 
