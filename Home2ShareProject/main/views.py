@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, SignupForm
 from django.views import generic, View
 from django.contrib.auth.models import User
+from django.urls import reverse_lazy
+from.models import House
 
 def index(request):
     context = {}
@@ -56,3 +58,31 @@ class UpdateUserView(generic.UpdateView):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+class HouseListView(generic.ListView):
+    model = House
+
+    def get_queryset(self):
+        return House.objects.all()
+
+class HouseDetailView(generic.DetailView):
+    model = House
+    slug_field = 'slug_name'
+    # query_pk_and_slug = True
+
+class HouseCreateView(generic.CreateView):
+    model = House
+    fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
+    success_url = reverse_lazy('house-list')
+
+class HouseUpdateView(generic.UpdateView):
+    model = House
+    slug_field = 'slug_name'
+    fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
+    success_url = reverse_lazy('house-list')
+
+class HouseDeleteView(generic.DeleteView):
+    model = House
+    slug_field = 'slug_name'
+    success_url = reverse_lazy('house-list')

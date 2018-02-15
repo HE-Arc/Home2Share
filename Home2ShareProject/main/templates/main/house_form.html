@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Add house{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Add a new house</h1>
+  <hr>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type="submit" value="Save" />
+  </form>
+
+</div>
+{% endblock %}
