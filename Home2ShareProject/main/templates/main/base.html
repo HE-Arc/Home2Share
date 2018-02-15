@@ -39,7 +39,9 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout <i class="material-icons" id="logout_icon">power_settings_new</i></a>
+
+          <a class="nav-link" href="{% url 'logout' %}?next={{request.path}}">Logout<i class="material-icons" id="logout_icon">power_settings_new</i></a>
+
         </li>
         {% else %}
         <li class="nav-item">
