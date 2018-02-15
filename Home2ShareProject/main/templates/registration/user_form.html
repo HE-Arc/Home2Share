@@ -3,10 +3,18 @@
 
 {% block content %} 
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save" />
-</form>
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="display-4">Suscribe / Edit profile</h1>
+    <hr/>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Save" />
+    </form>
+  </div>
+</div>
+
+
 
 {% endblock %}
