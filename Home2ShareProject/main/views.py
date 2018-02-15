@@ -62,7 +62,7 @@ def logout_view(request):
 
 class HouseListView(generic.ListView):
     model = House
-    paginate_by = 2
+    paginate_by = 3
 
     def get_queryset(self):
         return House.objects.all()
