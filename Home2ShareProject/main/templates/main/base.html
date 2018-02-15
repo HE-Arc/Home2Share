@@ -38,14 +38,14 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'Logout' %}">Logout</a>
+          <a class="nav-link" href="{% url 'logout' %}?next={{request.path}}">Logout</a>
         </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'register' %}">Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'Login' %}">Login</a>
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
         </li>
         {% endif %}
       </ul>
