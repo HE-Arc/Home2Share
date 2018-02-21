@@ -1,5 +1,6 @@
 from django.urls import path , include
-from . import views
+
+import main.views as views
 
 # Used for the local image hack
 from django.conf import settings

@@ -1,20 +1,14 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.views import generic, View
+from django.views import generic
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
-from .forms import SignupForm
-from .models import House
+from main.forms import SignupForm
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from .tokens import account_activation_token
+from main.tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
-
-def index(request):
-    context = {}
-    return render(request, 'index.html', context)
 
 def account_activation_sent(request):
     context = {}
@@ -74,32 +68,3 @@ class UpdateUserView(generic.UpdateView):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
-
-
-class HouseListView(generic.ListView):
-    model = House
-    paginate_by = 3
-
-    def get_queryset(self):
-        return House.objects.all()
-
-class HouseDetailView(generic.DetailView):
-    model = House
-    slug_field = 'slug_name'
-    # query_pk_and_slug = True
-
-class HouseCreateView(generic.CreateView):
-    model = House
-    fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
-    success_url = reverse_lazy('house-list')
-
-class HouseUpdateView(generic.UpdateView):
-    model = House
-    slug_field = 'slug_name'
-    fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
-    success_url = reverse_lazy('house-list')
-
-class HouseDeleteView(generic.DeleteView):
-    model = House
-    slug_field = 'slug_name'
-    success_url = reverse_lazy('house-list')
