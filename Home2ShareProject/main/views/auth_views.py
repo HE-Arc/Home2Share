@@ -32,6 +32,7 @@ def activate(request, uidb64, token):
         return render(request, 'registration/account_activation_invalid.html',context)
 
 class UserCreateView(generic.CreateView):
+    name = "create"
     model = User
     form_class = SignupForm
     success_url = '/account_activation_sent'
@@ -60,6 +61,7 @@ class ProfileView(generic.DetailView):
 
 class UpdateUserView(generic.UpdateView):
     model = User
+    name="update"
     fields = ['username', 'email']
     slug_field = 'username'
     success_url = '/'
