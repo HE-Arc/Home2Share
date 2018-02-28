@@ -8,14 +8,15 @@
   <div class="row">
     <div class="col-md-12">
 
-      <h1 class="display-4">All the houses</h1>
-      <p class="lead text-muted">A list of our magnificent houses to share.</p>
+      <h1 class="display-4">{% if view.name == 'profile-house-list' %}Your houses{% else %}All the houses{% endif %}</h1>
+      <p class="lead text-muted">{% if view.name == 'profile-house-list' %}Houses that are yours{% else %}A list of our magnificent houses to share.{% endif %}</p>
 
       <hr/>
-
+      {% if view.name == 'profile-house-list' %}
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <a href="{% url 'house-new' user.username %}" class="btn btn-success btn-sm"><i class="material-icons">add</i>Add a new house</a>
       </div>
+      {% endif %}
 
     	<div class="row">
 
@@ -23,12 +24,28 @@
 
       <!-- Creating a column for each treasure panel -->
       <div class="col-md-4">
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 21rem;">
           <img class="card-img-top" src="{{ house.image.url }}" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">{{ house.name }}</h5>
             <p class="card-text"><h6>{{ house.city}}, {{house.country}}</strong></h6>{{ house.description|truncatewords:50 }} <br>by {{ house.user.username }}</p>
-            <a href="/house/{{house.slug_name}}/" class="btn btn-primary">Details</a>
+
+
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <a href="/house/{{house.slug_name}}/" class="btn btn-primary">Details</a>
+              </div>
+              {% if house.user.username == request.user.username %}
+              <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <a href="{% url 'house-update' house.slug_name %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
+              </div>
+              <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <a href="{% url 'house-delete' house.slug_name %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
+              </div>
+              {% endif %}
+            </div>
+
+
           </div>
         </div>
       </div>
