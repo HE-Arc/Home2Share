@@ -24,7 +24,9 @@ class House(models.Model):
     person_quantity=models.PositiveSmallIntegerField()
     price=models.DecimalField(max_digits=5, decimal_places=2)
     image = models.ImageField(upload_to='house_images', default='default.jpg')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # Voir commentaire : https://github.com/HE-Arc/Home2Share/commit/2640e440612c46b9a03ff92a1c7e0426e9af822f#comments
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug

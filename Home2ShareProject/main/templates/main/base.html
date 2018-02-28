@@ -36,12 +36,11 @@
           <div class="dropdown-menu" aria-labelledby="dropdown01">
             <a class="dropdown-item" href="{% url 'user-update' user.username %}"><i class="material-icons">mode_edit</i>Edit profile</a>
             <a class="dropdown-item" href="{% url 'profile' user.username %}"><i class="material-icons">person</i>My profile</a>
+            <a class="dropdown-item" href="{% url 'user-house-list' user.username %}"><i class="material-icons">view_list</i>My Houses</a>
           </div>
         </li>
         <li class="nav-item">
-
           <a class="nav-link" href="{% url 'logout' %}?next={{request.path}}">Logout<i class="material-icons" id="logout_icon">power_settings_new</i></a>
-
         </li>
         {% else %}
         <li class="nav-item">
