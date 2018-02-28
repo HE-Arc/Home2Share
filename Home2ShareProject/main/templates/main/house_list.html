@@ -13,6 +13,10 @@
 
       <hr/>
 
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <a href="{% url 'house-new' user.username %}" class="btn btn-success btn-sm"><i class="material-icons">add</i>Add a new house</a>
+      </div>
+
     	<div class="row">
 
       {% for house in house_list %}

@@ -30,13 +30,18 @@
       </form>
 
       <ul class="navbar-nav ml-auto">
-        {% if user.is_authenticated %}
+        {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>Signed in as {{ user.username }}</a>
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>Signed in as {{ request.user.username }}</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
+<<<<<<< HEAD
             <a class="dropdown-item" href="{% url 'user-update' user.username %}"><i class="material-icons">mode_edit</i>Edit profile</a>
             <a class="dropdown-item" href="{% url 'profile' user.username %}"><i class="material-icons">person</i>My profile</a>
             <a class="dropdown-item" href="{% url 'user-house-list' user.username %}"><i class="material-icons">view_list</i>My Houses</a>
+=======
+            <a class="dropdown-item" href="{% url 'user-update' request.user.username %}"><i class="material-icons">mode_edit</i>Edit profile</a>
+            <a class="dropdown-item" href="{% url 'profile' request.user.username %}"><i class="material-icons">person</i>My profile</a>
+>>>>>>> origin/master
           </div>
         </li>
         <li class="nav-item">

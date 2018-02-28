@@ -5,16 +5,23 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h1 class="display-4">Suscribe / Edit profile</h1>
+    {% if view.name == "create" %}
+      <h1 class="display-4">Sign up</h1>
+    {% else %}
+      <h1 class="display-4">Edit profile</h1>
+    {% endif %}
     <hr/>
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-primary" type="submit" value="Save" />
     </form>
+    {% if view.name == "update" %}
+      <p><a href="{% url 'password_reset' %}">reset password</a></p>
+    {% endif %}
   </div>
 </div>
-
+<!-- add password change link but have to know if its signup or edit-->
 
 
 {% endblock %}

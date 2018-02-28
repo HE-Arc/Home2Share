@@ -15,11 +15,12 @@ urlpatterns = [
     path('user/<slug>/houses', views.UserHouseListView.as_view(), name='user-house-list'),
     path('user/<slug>/update', views.UpdateUserView.as_view(), name='user-update'),
     path('user/<slug>/house/new', views.HouseCreateView.as_view(), name='house-new'),
+    
+    path('house/<slug>/update', views.HouseUpdateView.as_view(), name='house-update'),
+    path('house/<slug>/delete', views.HouseDeleteView.as_view(), name='house-delete'),
     path('register/',views.UserCreateView.as_view(),name='register'),
     path('houses', views.HouseListView.as_view(), name='house-list'),
     path('house/<slug>/', views.HouseDetailView.as_view(), name='house-detail'),
-    path('house/<slug>/update', views.HouseUpdateView.as_view(), name='house-update'),
-    path('house/<slug>/delete', views.HouseDeleteView.as_view(), name='house-delete'),
     path('account_activation_sent/',views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>',views.activate, name='activate'),
 ]

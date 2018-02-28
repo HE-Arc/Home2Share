@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404
 class UserHouseListView(generic.ListView):
     model = House
     paginate_by = 3
-    template_name = 'main/user_house_list.html'
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs['slug'])
