@@ -61,7 +61,7 @@ class ProfileView(generic.DetailView):
 
 class UpdateUserView(generic.UpdateView):
     model = User
-    name="update"
+    name= "update"
     fields = ['username', 'email']
     slug_field = 'username'
     success_url = '/'
