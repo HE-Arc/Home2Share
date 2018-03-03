@@ -15,7 +15,7 @@ urlpatterns = [
     path('user/<slug>/houses', views.UserHouseListView.as_view(), name='user-house-list'),
     path('user/<slug>/update', views.UpdateUserView.as_view(), name='user-update'),
     path('user/<slug>/house/new', views.HouseCreateView.as_view(), name='house-new'),
-    
+    path('house/<slug>/comment/', views.HouseCommentCreateView.as_view(), name='house-comment-create'),
     path('house/<slug>/update', views.HouseUpdateView.as_view(), name='house-update'),
     path('house/<slug>/delete', views.HouseDeleteView.as_view(), name='house-delete'),
     path('register/',views.UserCreateView.as_view(),name='register'),

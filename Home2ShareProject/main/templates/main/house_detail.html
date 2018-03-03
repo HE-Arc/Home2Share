@@ -35,6 +35,25 @@
       </div>
       {% endif %}
 
+      <h2>Comments</h2>
+      <h3>Add a new comment</h3>
+      <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+      </form>
+      <h3>Comment list</h3>
+      {% for comment in comments %}
+
+        <h4>{{ comment.user }}</h4>
+        <p>{{ comment.body }}</p>
+
+      {% empty %}
+
+        <p>No comment yet</p>
+
+      {% endfor %}
+
 
 
     </div>
