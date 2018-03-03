@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load bootstrap4 %}
 
 {% block title %}Details | {{ house.name }}{% endblock %}
 
@@ -38,9 +39,10 @@
       <h2>Comments</h2>
       <h3>Add a new comment</h3>
       <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
+        {% bootstrap_form form  %}
+        {% buttons %}
+            <button value="save" type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
       </form>
       <h3>Comment list</h3>
       {% for comment in comments %}

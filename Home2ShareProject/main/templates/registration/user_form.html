@@ -1,5 +1,6 @@
 {% extends '../main/base.html' %}
 {% load staticfiles %}
+{% load bootstrap4 %}
 
 {% block content %} 
 
@@ -12,9 +13,10 @@
     {% endif %}
     <hr/>
     <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input class="btn btn-primary" type="submit" value="Save" />
+      {% bootstrap_form form layout='horizontal' %}
+      {% buttons %}
+          <button value="save" type="submit" class="btn btn-primary">Submit</button>
+      {% endbuttons %}
     </form>
     {% if view.name == "update" %}
       <p><a href="{% url 'password_reset' %}">reset password</a></p>
