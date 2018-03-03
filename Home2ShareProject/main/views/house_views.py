@@ -95,3 +95,15 @@ class HouseCommentCreateView(SingleObjectMixin, FormView):
 
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.slug_name})
+
+class CommentUpdateView(generic.UpdateView):
+    model = Comment
+    fields = ['body']
+
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
+
+class CommentDeleteView(generic.DeleteView):
+    model = Comment
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})

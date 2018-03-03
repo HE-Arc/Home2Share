@@ -48,6 +48,17 @@
         <h4>{{ comment.user }}</h4>
         <p>{{ comment.body }}</p>
 
+        {% if comment.user.username == request.user.username %}
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="First group">
+            <a href="{% url 'comment-update' comment.id %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
+          </div>
+          <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <a href="{% url 'comment-delete' comment.id %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
+          </div>
+        </div>
+        {% endif %}
+
       {% empty %}
 
         <p>No comment yet</p>
