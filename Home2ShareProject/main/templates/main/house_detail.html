@@ -39,6 +39,7 @@
       <h2>Comments</h2>
       <h3>Add a new comment</h3>
       <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
+        {% csrf_token %}
         {% bootstrap_form form  %}
         {% buttons %}
             <button value="save" type="submit" class="btn btn-primary">Submit</button>

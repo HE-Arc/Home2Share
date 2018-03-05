@@ -13,6 +13,7 @@
     {% endif %}
     <hr/>
     <form action="" method="post">
+      {% csrf_token %}
       {% bootstrap_form form layout='horizontal' %}
       {% buttons %}
           <button value="save" type="submit" class="btn btn-primary">Submit</button>

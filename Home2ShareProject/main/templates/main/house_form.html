@@ -8,6 +8,7 @@
   <h1>Add a new house</h1>
   <hr>
   <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
     {% buttons %}
         <button value="save" type="submit" class="btn btn-primary">Submit</button>
