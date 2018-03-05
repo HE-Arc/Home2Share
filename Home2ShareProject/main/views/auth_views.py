@@ -92,12 +92,6 @@ class ProfileView(LoginRequiredMixin,generic.DetailView):
     slug_field = 'username'
     template_name = 'registration/user_detail.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.username == request.user.username:
-            return super(ProfileView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
 
 class UpdateUserView(LoginRequiredMixin,generic.UpdateView):
     model = User
