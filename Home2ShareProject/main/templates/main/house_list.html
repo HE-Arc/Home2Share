@@ -28,7 +28,7 @@
           <img class="card-img-top" src="{{ house.image.url }}" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">{{ house.name }}</h5>
-            <p class="card-text"><h6>{{ house.city}}, {{house.country}}</strong></h6>{{ house.description|truncatewords:50 }} <br>by {{ house.user.username }}</p>
+            <p class="card-text"><h6>{{ house.city}}, {{house.country}}</strong></h6>{{ house.description|truncatewords:50 }}</p>
 
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -46,6 +46,9 @@
             </div>
 
 
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">by <a href="{% url 'profile' house.user.username %}">{{ house.user.username }}</a></small>
           </div>
         </div>
       </div>

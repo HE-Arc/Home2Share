@@ -50,12 +50,7 @@ def update_user_profile(sender, instance, created, **kwargs):
 
 
 class Comment(models.Model):
-    body = models.CharField(max_length=255)
+    body = models.TextField('Message', max_length=255)
     last_modif_date = models.DateTimeField('last modification', auto_now=True)
     house = models.ForeignKey('House', on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-
-
-
-
-    
