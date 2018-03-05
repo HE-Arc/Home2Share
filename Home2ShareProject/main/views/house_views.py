@@ -1,8 +1,12 @@
 from django.views import generic
-from django.urls import reverse_lazy
-from main.models import House
+from django.urls import reverse_lazy, reverse
+from main.models import House, Comment
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.views.generic.edit import FormView
+from main.forms.CommentForm import CommentForm
+from django.views.generic.detail import SingleObjectMixin
+from django.http import HttpResponseForbidden
 
 # -------------------------------------------
 # USER
@@ -14,8 +18,13 @@ class UserHouseListView(generic.ListView):
     name = 'profile-house-list'
 
     def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs['slug'])
-        return House.objects.filter(user=user.pk)
+
+        query_houses = House.objects.filter(user__username = self.kwargs['slug']).prefetch_related('user')
+
+        # if not query_user.count():
+        #     raise Http404("No User matches the given query.")
+
+        return query_houses
 
 
 # -------------------------------------------
@@ -32,7 +41,12 @@ class HouseListView(generic.ListView):
 class HouseDetailView(generic.DetailView):
     model = House
     slug_field = 'slug_name'
-    # query_pk_and_slug = True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = Comment.objects.filter(house__id=self.object.pk).prefetch_related('user')
+        context['form'] = CommentForm()
+        return context
 
 class HouseCreateView(generic.CreateView):
     model = House
@@ -55,3 +69,41 @@ class HouseDeleteView(generic.DeleteView):
     model = House
     slug_field = 'slug_name'
     success_url = reverse_lazy('house-list')
+
+
+class HouseCommentCreateView(SingleObjectMixin, FormView):
+    template_name = 'main/house_detail.html'
+    slug_field = 'slug_name'
+    form_class = CommentForm
+    model = House
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # TODO : cas de de l'utilisateur non connecté à gérer
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            comment = Comment()
+            comment.body = form.cleaned_data['body']
+            comment.user = request.user
+            comment.house = self.object
+            comment.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.slug_name})
+
+class CommentUpdateView(generic.UpdateView):
+    model = Comment
+    fields = ['body']
+
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
+
+class CommentDeleteView(generic.DeleteView):
+    model = Comment
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
