@@ -2,7 +2,7 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from main.models import House, Comment
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,redirect
 from django.views.generic.edit import FormView
 from main.forms.CommentForm import CommentForm
 from django.views.generic.detail import SingleObjectMixin
@@ -25,6 +25,12 @@ class UserHouseListView(generic.ListView):
         #     raise Http404("No User matches the given query.")
 
         return query_houses
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.kwargs['slug'] == request.user.username:
+            return super(UserHouseListView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')
 
 
 # -------------------------------------------
@@ -65,10 +71,24 @@ class HouseUpdateView(generic.UpdateView):
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user.username == request.user.username:
+            return super(HouseUpdateView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')
+
 class HouseDeleteView(generic.DeleteView):
     model = House
     slug_field = 'slug_name'
     success_url = reverse_lazy('house-list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user.username == request.user.username:
+            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')
 
 
 class HouseCommentCreateView(SingleObjectMixin, FormView):
@@ -103,7 +123,21 @@ class CommentUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user.username == request.user.username:
+            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')
+
 class CommentDeleteView(generic.DeleteView):
     model = Comment
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user.username == request.user.username:
+            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')

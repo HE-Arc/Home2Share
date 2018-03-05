@@ -10,7 +10,6 @@ from django.template.loader import render_to_string
 from main.tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 
@@ -88,10 +87,17 @@ class UserCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class ProfileView(generic.DetailView):
+class ProfileView(LoginRequiredMixin,generic.DetailView):
     model = User
     slug_field = 'username'
     template_name = 'registration/user_detail.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.username == request.user.username:
+            return super(ProfileView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('/')
 
 class UpdateUserView(LoginRequiredMixin,generic.UpdateView):
     model = User
@@ -106,7 +112,7 @@ class UpdateUserView(LoginRequiredMixin,generic.UpdateView):
         if self.object.username == request.user.username:
             return super(UpdateUserView, self).dispatch(request, *args, **kwargs)
         else:
-            return redirect('profile', self.object.username)
+            return redirect('/')
 
 
 def logout_view(request):
