@@ -7,6 +7,7 @@ from django.views.generic.edit import FormView
 from main.forms.CommentForm import CommentForm
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # -------------------------------------------
 # USER
@@ -54,7 +55,7 @@ class HouseDetailView(generic.DetailView):
         context['form'] = CommentForm()
         return context
 
-class HouseCreateView(generic.CreateView):
+class HouseCreateView(generic.CreateView,LoginRequiredMixin):
     model = House
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
@@ -91,7 +92,7 @@ class HouseDeleteView(generic.DeleteView):
             return redirect('/')
 
 
-class HouseCommentCreateView(SingleObjectMixin, FormView):
+class HouseCommentCreateView(LoginRequiredMixin,SingleObjectMixin, FormView):
     template_name = 'main/house_detail.html'
     slug_field = 'slug_name'
     form_class = CommentForm
@@ -126,7 +127,7 @@ class CommentUpdateView(generic.UpdateView):
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.user.username == request.user.username:
-            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+            return super(CommentUpdateView, self).dispatch(request, *args, **kwargs)
         else:
             return redirect('/')
 
@@ -138,6 +139,6 @@ class CommentDeleteView(generic.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.user.username == request.user.username:
-            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+            return super(CommentDeleteView, self).dispatch(request, *args, **kwargs)
         else:
             return redirect('/')

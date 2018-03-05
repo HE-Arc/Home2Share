@@ -5,13 +5,15 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h1 class="display-4">Your profile : {{ user.username }}</h1>
+    <h1 class="display-4">Profile : {{ user.username }}</h1>
     <hr/>
     <ul>
       <li>{{ user.username }}</li>
       <li>{{ user.email }}</li>
     </ul>
+    {% if house.user.username == request.user.username %}
     <a href="{% url 'user-update' user.username %}" class="btn btn-success btn-sm">Update</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

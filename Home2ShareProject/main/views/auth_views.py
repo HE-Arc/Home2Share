@@ -87,13 +87,13 @@ class UserCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class ProfileView(LoginRequiredMixin,generic.DetailView):
+class ProfileView(generic.DetailView):
     model = User
     slug_field = 'username'
     template_name = 'registration/user_detail.html'
 
 
-class UpdateUserView(LoginRequiredMixin,generic.UpdateView):
+class UpdateUserView(generic.UpdateView):
     model = User
     name= "update"
     fields = ['username', 'email']
