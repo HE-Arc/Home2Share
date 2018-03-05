@@ -9,10 +9,44 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from main.tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+
+
+
+# test de décorateur pour pas devoir recopier le code partout
+# marche pas car change le type de la wrapped class
+# def loggedUser():
+#     # this does the actual heavy lifting of decorating the class
+#     # this function takes a class and returns a class
+#     def wrapper(wrapped):
+#
+#         # we inherit from the class we're wrapping (wrapped)
+#         # so that methods defined on this class are still present
+#         # in the decorated "output" class
+#         class WrappedClass(wrapped):
+#             # def __init__(self):
+#             #     self.param1 = param1
+#             #     self.param2 = param2
+#             #     # call the parent initializer last in case it does initialization work
+#             #     super(WrappedClass, self).__init__()
+#
+#             # the method we want to define
+#             def dispatch(self, request, *args, **kwargs):
+#                 self.object = self.get_object()
+#                 if self.object.username == request.user.username:
+#                     return super(UserUpdateView, self).dispatch(request, *args, **kwargs)
+#                 else:
+#                     return redirect('profile', self.object.username)
+#
+#         return WrappedClass
+#     return wrapper
+
 
 def account_activation_sent(request):
     context = {}
     return render(request, 'registration/account_activation_sent.html', context)
+
 
 def activate(request, uidb64, token):
     try:
@@ -59,13 +93,21 @@ class ProfileView(generic.DetailView):
     slug_field = 'username'
     template_name = 'registration/user_detail.html'
 
-class UpdateUserView(generic.UpdateView):
+class UpdateUserView(LoginRequiredMixin,generic.UpdateView):
     model = User
     name= "update"
     fields = ['username', 'email']
     slug_field = 'username'
     success_url = '/'
     template_name = 'registration/user_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.username == request.user.username:
+            return super(UpdateUserView, self).dispatch(request, *args, **kwargs)
+        else:
+            return redirect('profile', self.object.username)
+
 
 def logout_view(request):
     logout(request)
