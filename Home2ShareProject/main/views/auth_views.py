@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from main.tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin ,UserPassesTestMixin
 
 
 
@@ -93,7 +93,7 @@ class ProfileView(generic.DetailView):
     template_name = 'registration/user_detail.html'
 
 
-class UpdateUserView(generic.UpdateView):
+class UpdateUserView(UserPassesTestMixin, LoginRequiredMixin, generic.UpdateView):
     model = User
     name= "update"
     fields = ['username', 'email']
@@ -101,12 +101,9 @@ class UpdateUserView(generic.UpdateView):
     success_url = '/'
     template_name = 'registration/user_form.html'
 
-    def dispatch(self, request, *args, **kwargs):
+    def test_func(self):
         self.object = self.get_object()
-        if self.object.username == request.user.username:
-            return super(UpdateUserView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+        return self.object.username == self.request.user.username
 
 
 def logout_view(request):

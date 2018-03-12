@@ -7,13 +7,17 @@ from django.views.generic.edit import FormView
 from main.forms.CommentForm import CommentForm
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseForbidden
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#Use UsersPassTestMixin a la place de dispatch
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # -------------------------------------------
 # USER
 # -------------------------------------------
 
-class UserHouseListView(generic.ListView):
+class UserHouseListView(UserPassesTestMixin, generic.ListView):
     model = House
     paginate_by = 3
     name = 'profile-house-list'
@@ -27,11 +31,14 @@ class UserHouseListView(generic.ListView):
 
         return query_houses
 
-    def dispatch(self, request, *args, **kwargs):
-        if self.kwargs['slug'] == request.user.username:
-            return super(UserHouseListView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+    def test_func(self):
+        return self.kwargs['slug'] == self.request.user.username
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     if self.kwargs['slug'] == request.user.username:
+    #         return super(UserHouseListView, self).dispatch(request, *args, **kwargs)
+    #     else:
+    #         return redirect('/')
 
 
 # -------------------------------------------
@@ -55,7 +62,7 @@ class HouseDetailView(generic.DetailView):
         context['form'] = CommentForm()
         return context
 
-class HouseCreateView(generic.CreateView,LoginRequiredMixin):
+class HouseCreateView(LoginRequiredMixin, generic.CreateView):
     model = House
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
@@ -66,33 +73,41 @@ class HouseCreateView(generic.CreateView,LoginRequiredMixin):
         house.save()
         return super().form_valid(form)
 
-class HouseUpdateView(generic.UpdateView):
+class HouseUpdateView(UserPassesTestMixin, generic.UpdateView):
     model = House
     slug_field = 'slug_name'
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
 
-    def dispatch(self, request, *args, **kwargs):
+    def test_func(self):
         self.object = self.get_object()
-        if self.object.user.username == request.user.username:
-            return super(HouseUpdateView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+        return self.object.user.username == self.request.user.username
 
-class HouseDeleteView(generic.DeleteView):
+    # def dispatch(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     if self.object.user.username == request.user.username:
+    #         return super(HouseUpdateView, self).dispatch(request, *args, **kwargs)
+    #     else:
+    #         return redirect('/')
+
+class HouseDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = House
     slug_field = 'slug_name'
     success_url = reverse_lazy('house-list')
 
-    def dispatch(self, request, *args, **kwargs):
+    def test_func(self):
         self.object = self.get_object()
-        if self.object.user.username == request.user.username:
-            return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+        return self.object.user.username == self.request.user.username
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     if self.object.user.username == request.user.username:
+    #         return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
+    #     else:
+    #         return redirect('/')
 
 
-class HouseCommentCreateView(LoginRequiredMixin,SingleObjectMixin, FormView):
+class HouseCommentCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):
     template_name = 'main/house_detail.html'
     slug_field = 'slug_name'
     form_class = CommentForm
@@ -117,28 +132,36 @@ class HouseCommentCreateView(LoginRequiredMixin,SingleObjectMixin, FormView):
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.slug_name})
 
-class CommentUpdateView(generic.UpdateView):
+class CommentUpdateView(UserPassesTestMixin, generic.UpdateView):
     model = Comment
     fields = ['body']
 
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
 
-    def dispatch(self, request, *args, **kwargs):
+    def test_func(self):
         self.object = self.get_object()
-        if self.object.user.username == request.user.username:
-            return super(CommentUpdateView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+        return self.object.user.username == self.request.user.username
 
-class CommentDeleteView(generic.DeleteView):
+    # def dispatch(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     if self.object.user.username == request.user.username:
+    #         return super(CommentUpdateView, self).dispatch(request, *args, **kwargs)
+    #     else:
+    #         return redirect('/')
+
+class CommentDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = Comment
     def get_success_url(self):
         return reverse('house-detail', kwargs={'slug': self.object.house.slug_name})
 
-    def dispatch(self, request, *args, **kwargs):
+    def test_func(self):
         self.object = self.get_object()
-        if self.object.user.username == request.user.username:
-            return super(CommentDeleteView, self).dispatch(request, *args, **kwargs)
-        else:
-            return redirect('/')
+        return self.object.user.username == self.request.user.username
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     if self.object.user.username == request.user.username:
+    #         return super(CommentDeleteView, self).dispatch(request, *args, **kwargs)
+    #     else:
+    #         return redirect('/')
