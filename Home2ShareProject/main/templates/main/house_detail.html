@@ -38,13 +38,34 @@
         <li>People : {{ house.person_quantity }}</li>
         <li>Price : {{ house.price }}</li>
       </ul>
+      <h3>Evaluations</h3>
 
+      <!-- User connected -->
+      {% if request.user.is_authenticated %}
+        <!-- No eval yet -->
+        {% if not evaluation %}
+          <form method="post" action="{% url 'house-evaluation-create' house.slug_name %}">
+            {% csrf_token %}
+            {% bootstrap_form formEvaluation  %}
+            {% buttons %}
+                <button value="save" type="submit" class="btn btn-primary">Submit</button>
+                <input type="hidden" name="next" value="/house/{{ object.slug_name }}" />
+            {% endbuttons %}
+          </form>
+        <!-- There's an eval -->
+        {% else %}
+          <p>Your evaluation : {{ evaluation.stars }}</p>
+        {% endif %}
+      <!-- No user connected -->
+      {% else %}
+        <p><a href="/login/?next=/house/{{ object.slug_name }}">Log in </a>to submit your evaluation.</p>
+      {% endif %}
       <h3>Comments</h3>
       <h4>Add a new comment</h4>
       {% if request.user.is_authenticated %}
         <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
           {% csrf_token %}
-          {% bootstrap_form form  %}
+          {% bootstrap_form formComments  %}
           {% buttons %}
               <button value="save" type="submit" class="btn btn-primary">Submit</button>
               <input type="hidden" name="next" value="/house/{{ object.slug_name }}" />

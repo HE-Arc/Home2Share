@@ -1,10 +1,11 @@
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from main.models import House, Comment
+from main.models import House, Comment, Evaluation
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404,redirect
 from django.views.generic.edit import FormView
 from main.forms.CommentForm import CommentForm
+from main.forms.EvaluationForm import EvaluationForm
 from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,7 +51,9 @@ class HouseDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(house__id=self.object.pk).prefetch_related('user')
-        context['form'] = CommentForm()
+        context['evaluation'] = Evaluation.objects.filter(house__id=self.object.pk, user__id=self.request.user.pk).first()
+        context['formComments'] = CommentForm()
+        context['formEvaluation'] = EvaluationForm()
         return context
 
 class HouseCreateView(generic.CreateView,LoginRequiredMixin):
@@ -139,3 +142,26 @@ class CommentDeleteView(generic.DeleteView):
             return super(CommentDeleteView, self).dispatch(request, *args, **kwargs)
         else:
             return redirect('/')
+
+
+class EvaluationCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):
+    template_name = 'main/house_detail.html'
+    slug_field = 'slug_name'
+    form_class = EvaluationForm
+    model = House
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            evaluation = Evaluation()
+            evaluation.stars = form.cleaned_data['stars']
+            evaluation.user = request.user
+            evaluation.house = self.object
+            evaluation.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('house-detail', kwargs={'slug': self.object.slug_name})
