@@ -1,11 +1,21 @@
 {% extends 'main/base.html' %}
 {% load bootstrap4 %}
 
-{% block title %}Add house{% endblock %}
+{% block title %}
+  {% if view.name == "new-house" %}
+    Add house
+  {% else %}
+    Edit house
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="container">
-  <h1>Add a new house</h1>
+  {% if view.name == "new-house" %}
+    <h1>Add a new house</h1>
+  {% else %}
+    <h1>Edit {{ object.name }}</h1>
+  {% endif %}
   <hr>
   <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}

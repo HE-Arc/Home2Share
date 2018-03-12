@@ -8,11 +8,25 @@
   <div class="row">
     <div class="col-md-12">
       <h1 class="display-4">{{ house.name }}</h1>
-      <p>{{ house.description }}</p>
-
+      {% if house.user.username == request.user.username %}
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+          <a href="{% url 'house-update' house.slug_name %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+          <a href="{% url 'house-delete' house.slug_name %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
+        </div>
+      </div>
+      {% endif %}
       <hr/>
 
-      <img src="{{ house.image.url }}" alt="House picture">
+      <div class="card" id="house_img_header">
+        <img class="card-img-bottom" src="{{ house.image.url }}" alt="House picture">
+      </div>
+
+
+      <h3>Description</h3>
+      <p>{{ house.description }}</p>
 
       <h3>Statistics</h3>
 
@@ -25,42 +39,42 @@
         <li>Price : {{ house.price }}</li>
       </ul>
 
-      {% if house.user.username == request.user.username %}
-      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
-          <a href="{% url 'house-update' house.slug_name %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
-        </div>
-        <div class="btn-group mr-2" role="group" aria-label="Second group">
-          <a href="{% url 'house-delete' house.slug_name %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
-        </div>
-      </div>
+      <h3>Comments</h3>
+      <h4>Add a new comment</h4>
+      {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
+          {% csrf_token %}
+          {% bootstrap_form form  %}
+          {% buttons %}
+              <button value="save" type="submit" class="btn btn-primary">Submit</button>
+              <input type="hidden" name="next" value="/house/{{ object.slug_name }}" />
+          {% endbuttons %}
+        </form>
+      {% else %}
+        <p><a href="/login/?next=/house/{{ object.slug_name }}">Log in </a>to post a comment.</p>
       {% endif %}
 
-      <h2>Comments</h2>
-      <h3>Add a new comment</h3>
-      <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
-        {% csrf_token %}
-        {% bootstrap_form form  %}
-        {% buttons %}
-            <button value="save" type="submit" class="btn btn-primary">Submit</button>
-        {% endbuttons %}
-      </form>
-      <h3>Comment list</h3>
+      <h4>Comment list</h4>
       {% for comment in comments %}
 
-        <h4>{{ comment.user }}</h4>
-        <p>{{ comment.body }}</p>
-
-        {% if comment.user.username == request.user.username %}
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-          <div class="btn-group mr-2" role="group" aria-label="First group">
-            <a href="{% url 'comment-update' comment.id %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
+        <div class="card">
+          <div class="card-header">
+            {{ comment.user }}
           </div>
-          <div class="btn-group mr-2" role="group" aria-label="Second group">
-            <a href="{% url 'comment-delete' comment.id %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
+          <div class="card-body">
+            <p class="card-text">{{ comment.body }}</p>
+            {% if comment.user.username == request.user.username %}
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <a href="{% url 'comment-update' comment.id %}" class="btn btn-success btn-sm"><i class="material-icons">mode_edit</i>Update</a>
+              </div>
+              <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <a href="{% url 'comment-delete' comment.id %}" class="btn btn-warning btn-sm"><i class="material-icons">delete_forever</i>Delete</a>
+              </div>
+            </div>
+            {% endif %}
           </div>
         </div>
-        {% endif %}
 
       {% empty %}
 

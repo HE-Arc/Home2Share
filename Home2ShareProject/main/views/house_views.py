@@ -23,7 +23,6 @@ class UserHouseListView(UserPassesTestMixin, generic.ListView):
     name = 'profile-house-list'
 
     def get_queryset(self):
-
         query_houses = House.objects.filter(user__username = self.kwargs['slug']).prefetch_related('user')
 
         # if not query_user.count():
@@ -47,7 +46,6 @@ class UserHouseListView(UserPassesTestMixin, generic.ListView):
 class HouseListView(generic.ListView):
     model = House
     paginate_by = 3
-    name = 'public-house-list'
 
     def get_queryset(self):
         return House.objects.all()
@@ -66,6 +64,7 @@ class HouseCreateView(LoginRequiredMixin, generic.CreateView):
     model = House
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
+    name = 'new-house'
 
     def form_valid(self, form):
         house = form.save(commit = False)
@@ -78,6 +77,7 @@ class HouseUpdateView(UserPassesTestMixin, generic.UpdateView):
     slug_field = 'slug_name'
     fields = ['name', 'country', 'city', 'street_name', 'street_number', 'description', 'room_quantity', 'person_quantity', 'price', 'image']
     success_url = reverse_lazy('house-list')
+    name = 'update-house'
 
     def test_func(self):
         self.object = self.get_object()
@@ -114,9 +114,6 @@ class HouseCommentCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):
     model = House
 
     def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            # TODO : cas de de l'utilisateur non connecté à gérer
-            return HttpResponseForbidden()
         self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():

@@ -12,6 +12,22 @@ main{
   margin-top: 30px;
 }
 
+.card{
+  margin-top: 20px;
+}
+
+#house_img_header{
+  margin-bottom: 20px;
+}
+
+.right{
+  float: right;
+}
+
+.clear{
+  clear:both;
+}
+
 /* Button / Icon style
 --------------------------------------------------*/
 
