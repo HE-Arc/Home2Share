@@ -42,24 +42,36 @@
 
       <!-- User connected -->
       {% if request.user.is_authenticated %}
-        <!-- No eval yet -->
-        {% if not evaluation %}
-          <form method="post" action="{% url 'house-evaluation-create' house.slug_name %}">
+
+        <div class="rating-block">
+          <h4>Average user rating</h4>
+          <h2 class="bold padding-bottom-7"><span id="average">
+            <!-- There's an eval -->
+            {% if evaluation %}
+              {{ average_evaluation }}
+            {% else %}
+              No rating yet
+            {% endif %}
+          </span> <small> / 5</small></h2>
+
+          <form data-slug="{{ house.slug_name }}" data-id="{{ house.id }}" id="form_eval" method="post" action="{% url 'house-evaluation-create' %}">
             {% csrf_token %}
-            {% bootstrap_form formEvaluation  %}
-            {% buttons %}
-                <button value="save" type="submit" class="btn btn-primary">Submit</button>
-                <input type="hidden" name="next" value="/house/{{ object.slug_name }}" />
-            {% endbuttons %}
+            {% for i in "xxxxx" %}
+              <button data-value="{{ forloop.counter }}" type="button" class="btn {% if forloop.counter <= evaluation.stars %}btn-warning{% endif %}">
+                <i class="material-icons">star_rate</i>
+              </button>
+            {% endfor %}
           </form>
-        <!-- There's an eval -->
-        {% else %}
-          <p>Your evaluation : {{ evaluation.stars }}</p>
-        {% endif %}
+        </div>
+
+
+
+
       <!-- No user connected -->
       {% else %}
         <p><a href="/login/?next=/house/{{ object.slug_name }}">Log in </a>to submit your evaluation.</p>
       {% endif %}
+
       <h3>Comments</h3>
       <h4>Add a new comment</h4>
       {% if request.user.is_authenticated %}
