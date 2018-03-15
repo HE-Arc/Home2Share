@@ -1,4 +1,4 @@
-enabled_buttons = null;
+var enabled_buttons = null;
 
 $('.rating-block button').hover( function(event){
   enabled_buttons = $('.rating-block button.btn-warning');
