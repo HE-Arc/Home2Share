@@ -1,8 +1,18 @@
-$('.rating-block button').hover(function(event){
+enabled_buttons = null;
+
+$('.rating-block button').hover( function(event){
+  enabled_buttons = $('.rating-block button.btn-warning');
   $('.rating-block button').removeClass('btn-warning btn-grey');
   $(this).addClass('btn-warning');
   $(this).prevAll().addClass('btn-warning');
   $(this).nextAll().addClass('btn-grey');
+}, function(event){
+  if(enabled_buttons){
+    $('.rating-block button').removeClass('btn-warning btn-grey');
+    $('.rating-block button').addClass('btn-grey');
+    $(enabled_buttons).addClass('btn-warning').removeClass('btn-grey');
+  }
+
 });
 
 $('.rating-block button').on('click', function(event){
@@ -10,6 +20,7 @@ $('.rating-block button').on('click', function(event){
   var frm = $('#form_eval');
   var button = $(this);
   var stars = button.attr('data-value');
+  enabled_buttons = null;
   // alert(button.attr('data-value'));
   $.ajax({
     type: frm.attr('method'),

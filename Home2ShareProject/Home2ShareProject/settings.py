@@ -25,7 +25,7 @@ SECRET_KEY = '(ep+2e@(y494t*m^bb@q#22_(%h#r=i@9c41$lq7sg0w=3g6*^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['home2share.srvz-webapp.he-arc.ch']
+ALLOWED_HOSTS = ['home2share.srvz-webapp.he-arc.ch', 'localhost']
 
 
 # Application definition
