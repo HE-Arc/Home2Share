@@ -24,27 +24,87 @@
         <img class="card-img-bottom" src="{{ house.image.url }}" alt="House picture">
       </div>
 
+      <h3>Informations</h3>
 
-      <h3>Description</h3>
-      <p>{{ house.description }}</p>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Description</h5>
+              <p class="card-text">{{ house.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <h3>Statistics</h3>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Location</h5>
+              <div class="card-text">
+                <ul>
+                  <li>Country : {{ house.country }}</li>
+                  <li>City : {{ house.city }}</li>
+                  <li>Street : {{ house.street_name }} {{ house.street_number }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Details</h5>
+              <div class="card-text">
+                <ul>
+                  <li>Room : {{ house.room_quantity }}</li>
+                  <li>People : {{ house.person_quantity }}</li>
+                  <li>Price : {{ house.price }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
 
-      <ul>
-        <li>Country : {{ house.country }}</li>
-        <li>City : {{ house.city }}</li>
-        <li>Street : {{ house.street_name }} {{ house.street_number }}</li>
-        <li>Room : {{ house.room_quantity }}</li>
-        <li>People : {{ house.person_quantity }}</li>
-        <li>Price : {{ house.price }}</li>
-      </ul>
+      <h3>Evaluations</h3>
+
+      <div class="rating-block">
+        <h4>Average user rating</h4>
+        <h2 class="bold padding-bottom-7"><span id="average">
+          <!-- There's an eval -->
+          {% if evaluation %}
+            {{ average_evaluation }}
+          {% else %}
+            No rating yet
+          {% endif %}
+        </span> <small> / 5</small></h2>
+        <!-- User connected -->
+        {% if request.user.is_authenticated %}
+          <form data-slug="{{ house.slug_name }}" data-id="{{ house.id }}" id="form_eval" method="post" action="{% url 'house-evaluation-create' %}">
+            {% csrf_token %}
+            {% for i in "xxxxx" %}
+              <button data-value="{{ forloop.counter }}" type="button" class="btn {% if forloop.counter <= evaluation.stars %}btn-warning{% endif %}">
+                <i class="material-icons">star_rate</i>
+              </button>
+            {% endfor %}
+          </form>
+        <!-- No user connected -->
+        {% else %}
+          <p><a href="/login/?next=/house/{{ object.slug_name }}">Log in </a>to submit your evaluation.</p>
+        {% endif %}
+      </div>
+
+      <hr>
 
       <h3>Comments</h3>
       <h4>Add a new comment</h4>
       {% if request.user.is_authenticated %}
         <form method="post" action="{% url 'house-comment-create' house.slug_name %}">
           {% csrf_token %}
-          {% bootstrap_form form  %}
+          {% bootstrap_form formComments  %}
           {% buttons %}
               <button value="save" type="submit" class="btn btn-primary">Submit</button>
               <input type="hidden" name="next" value="/house/{{ object.slug_name }}" />

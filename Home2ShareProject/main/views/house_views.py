@@ -1,13 +1,16 @@
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from main.models import House, Comment
+from main.models import House, Comment, Evaluation
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404,redirect
 from django.views.generic.edit import FormView
 from main.forms.CommentForm import CommentForm
+from main.forms.EvaluationForm import EvaluationForm
 from django.views.generic.detail import SingleObjectMixin
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+
+import json
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #Use UsersPassTestMixin a la place de dispatch
@@ -57,7 +60,12 @@ class HouseDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(house__id=self.object.pk).prefetch_related('user')
-        context['form'] = CommentForm()
+        context['evaluation'] = Evaluation.objects.filter(house__id=self.object.pk, user__id=self.request.user.pk).first()
+        context['formComments'] = CommentForm()
+        context['formEvaluation'] = EvaluationForm()
+
+        context['average_evaluation'] = calc_average_stars(self.object.pk)
+
         return context
 
 class HouseCreateView(LoginRequiredMixin, generic.CreateView):
@@ -105,7 +113,6 @@ class HouseDeleteView(UserPassesTestMixin, generic.DeleteView):
     #         return super(HouseDeleteView, self).dispatch(request, *args, **kwargs)
     #     else:
     #         return redirect('/')
-
 
 class HouseCommentCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):
     template_name = 'main/house_detail.html'
@@ -163,7 +170,6 @@ class CommentDeleteView(UserPassesTestMixin, generic.DeleteView):
     #     else:
     #         return redirect('/')
 
-
 class SearchHouseView(generic.ListView):
     template_name = 'main/house_list.html'
     model = House
@@ -179,3 +185,69 @@ class SearchHouseView(generic.ListView):
         else:
             object_list = self.model.objects.all()
         return object_list
+
+def update_rating(request):
+    if request.method == 'POST':
+        house_id = request.POST['house_id']
+        house_slug = request.POST['house_slug']
+        stars = int(request.POST['stars'])
+
+        house = House.objects.filter(pk=house_id).first()
+
+        evaluation = Evaluation.objects.filter(house__id=house_id, user__id=request.user.pk).first()
+
+        if not evaluation:
+            evaluation = Evaluation()
+
+        change_validated = False
+        if(stars <= 5 and stars >= 1):
+            evaluation.stars = stars
+            evaluation.user = request.user
+            evaluation.house = house
+            evaluation.save()
+            change_validated = True
+
+        response = {
+            'change_validated' : change_validated,
+            'average_evaluation' : calc_average_stars(house_id)
+        }
+
+        return HttpResponse(json.dumps(response), content_type='application/json')
+
+def calc_average_stars(house_id):
+    evals = Evaluation.objects.filter(house__id=house_id)
+    if evals.count() > 0:
+        sum_stars = 0
+        for e in evals:
+            sum_stars += e.stars
+        avg_stars = sum_stars/evals.count()
+        return avg_stars
+    else:
+        return 0
+
+#
+# class EvaluationCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):
+#     template_name = 'main/house_detail.html'
+#     slug_field = 'slug_name'
+#     form_class = EvaluationForm
+#     model = House
+#
+#     def post(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         form = self.get_form()
+#         evaluation = Evaluation.objects.filter(house__id=self.object.pk, user__id=self.request.user.pk).first()
+#         if form.is_valid():
+#             if not evaluation:
+#                 evaluation = Evaluation()
+#
+#             evaluation.stars = form.cleaned_data['stars']
+#             evaluation.user = request.user
+#             evaluation.house = self.object
+#             evaluation.save()
+#             return self.form_valid(form)
+#
+#         else:
+#             return self.form_invalid(form)
+#
+#     def get_success_url(self):
+#         return reverse('house-detail', kwargs={'slug': self.object.slug_name})
