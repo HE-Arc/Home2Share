@@ -162,3 +162,20 @@ class CommentDeleteView(UserPassesTestMixin, generic.DeleteView):
     #         return super(CommentDeleteView, self).dispatch(request, *args, **kwargs)
     #     else:
     #         return redirect('/')
+
+
+class SearchHouseView(generic.ListView):
+    template_name = 'main/house_list.html'
+    model = House
+    paginate_by = 3
+
+    def get_queryset(self):
+        try:
+            name = self.request.GET.get('q')
+        except:
+            name = ''
+        if (name != ''):
+            object_list = self.model.objects.filter(name__icontains = name)
+        else:
+            object_list = self.model.objects.all()
+        return object_list

@@ -25,6 +25,7 @@ urlpatterns = [
     path('house/<slug>/', views.HouseDetailView.as_view(), name='house-detail'),
     path('account_activation_sent/',views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>',views.activate, name='activate'),
+    path('search',views.SearchHouseView.as_view(), name='search_house')
 ]
 
 # For media working in localhost
