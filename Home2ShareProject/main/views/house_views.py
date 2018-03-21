@@ -22,7 +22,7 @@ import json
 
 class UserHouseListView(UserPassesTestMixin, generic.ListView):
     model = House
-    paginate_by = 3
+    paginate_by = 6
     name = 'profile-house-list'
 
     def get_queryset(self):
@@ -48,7 +48,7 @@ class UserHouseListView(UserPassesTestMixin, generic.ListView):
 # -------------------------------------------
 class HouseListView(generic.ListView):
     model = House
-    paginate_by = 3
+    paginate_by = 6
 
     def get_queryset(self):
         return House.objects.all()

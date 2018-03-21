@@ -25,7 +25,10 @@ class House(models.Model):
     price=models.DecimalField(max_digits=5, decimal_places=2)
     image = models.ImageField(upload_to='house_images', default='default.jpg')
     user = models.ForeignKey(User, related_name='houses', on_delete=models.CASCADE)
-    evaluations = models.ManyToManyField(User, through='Evaluation')
+    evaluations = models.ManyToManyField(User, through='Evaluation', related_name='evaluations')
+    comments = models.ManyToManyField(User, through='Comment', related_name='comments')
+    pub_date = models.DateTimeField('Added on', auto_now=False, auto_now_add=True)
+    update = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     # Voir commentaire : https://github.com/HE-Arc/Home2Share/commit/2640e440612c46b9a03ff92a1c7e0426e9af822f#comments
     def save(self, *args, **kwargs):
@@ -58,5 +61,5 @@ def update_user_profile(sender, instance, created, **kwargs):
 class Comment(models.Model):
     body = models.TextField('Message', max_length=255)
     last_modif_date = models.DateTimeField('last modification', auto_now=True)
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -18,7 +18,6 @@ urlpatterns = [
     path('house/<slug>/comment/new', views.HouseCommentCreateView.as_view(), name='house-comment-create'),
     path('comment/<pk>/update', views.CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<pk>/delete', views.CommentDeleteView.as_view(), name='comment-delete'),
-    #path('house/<slug>/evaluation/new', views.EvaluationCreateView.as_view(), name='house-evaluation-create'),
     path('house/evaluation/new', views.update_rating, name='house-evaluation-create'),
     path('house/<slug>/update', views.HouseUpdateView.as_view(), name='house-update'),
     path('house/<slug>/delete', views.HouseDeleteView.as_view(), name='house-delete'),
