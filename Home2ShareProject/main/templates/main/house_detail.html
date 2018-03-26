@@ -67,10 +67,21 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">House's Owner</h3>
+              <p class="card-text"><a href="{% url 'profile' house.user.username %}">{{ house.user.username }}</a> <br> <a href="mailto:{{ house.user.email }}" >{{ house.user.email }}</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr>
 
       <h2>Evaluations</h2>
-      
+
       <div class="rating-block">
         <h3>Average user rating (<span id="vote_count">{{ vote_count }}</span> evaluation{{ vote_count|pluralize }})</h3>
         <h4 class="bold padding-bottom-7"><span id="average">
