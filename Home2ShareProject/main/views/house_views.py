@@ -10,6 +10,8 @@ from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
+from django.db.models import Count, Avg
+
 import json
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -51,21 +53,27 @@ class HouseListView(generic.ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        return House.objects.all()
+        return House.objects.select_related('user').all()
 
 class HouseDetailView(generic.DetailView):
     model = House
     slug_field = 'slug_name'
 
+    def get_queryset(self):
+        return House.objects.select_related('user').prefetch_related('comment_set', 'comment_set__user').all()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments'] = Comment.objects.filter(house__id=self.object.pk).prefetch_related('user')
-        context['evaluation'] = Evaluation.objects.filter(house__id=self.object.pk, user__id=self.request.user.pk).first()
+        # context['comments'] = Comment.objects.filter(house__id=self.object.pk).prefetch_related('user')
+
+        evaluations = self.object.evaluation_set.all()
+
+        context['evaluation'] = evaluations.filter(user__id=self.request.user.pk).first()  # Evaluation.objects.filter(house__id=self.object.pk, user__id=self.request.user.pk).first()
         context['formComments'] = CommentForm()
         context['formEvaluation'] = EvaluationForm()
-
-        context['average_evaluation'] = calc_average_stars(self.object.pk)
-
+        context['vote_count'] = evaluations.count()
+        context['average_evaluation'] = self.object.evaluation_set.aggregate(stars=Avg('stars'))
+        
         return context
 
 class HouseCreateView(LoginRequiredMixin, generic.CreateView):
@@ -209,21 +217,22 @@ def update_rating(request):
 
         response = {
             'change_validated' : change_validated,
-            'average_evaluation' : calc_average_stars(house_id)
+            'average_evaluation' : list(Evaluation.objects.filter(house__id=house_id).aggregate(stars=Avg('stars')).values())[0],
+            'vote_count' : Evaluation.objects.filter(house__id=house_id).count()
         }
 
         return HttpResponse(json.dumps(response), content_type='application/json')
 
-def calc_average_stars(house_id):
-    evals = Evaluation.objects.filter(house__id=house_id)
-    if evals.count() > 0:
-        sum_stars = 0
-        for e in evals:
-            sum_stars += e.stars
-        avg_stars = sum_stars/evals.count()
-        return avg_stars
-    else:
-        return 0
+# def calc_average_stars(house_id):
+#     evals = Evaluation.objects.filter(house__id=house_id)
+#     if evals.count() > 0:
+#         sum_stars = 0
+#         for e in evals:
+#             sum_stars += e.stars
+#         avg_stars = sum_stars/evals.count()
+#         return avg_stars
+#     else:
+#         return 0
 
 #
 # class EvaluationCreateView(LoginRequiredMixin, SingleObjectMixin, FormView):

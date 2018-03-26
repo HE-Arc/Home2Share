@@ -25,8 +25,8 @@ class House(models.Model):
     price=models.DecimalField(max_digits=5, decimal_places=2)
     image = models.ImageField(upload_to='house_images', default='default.jpg')
     user = models.ForeignKey(User, related_name='houses', on_delete=models.CASCADE)
-    evaluations = models.ManyToManyField(User, through='Evaluation', related_name='evaluations')
-    comments = models.ManyToManyField(User, through='Comment', related_name='comments')
+    evaluations = models.ManyToManyField(User, through='Evaluation', related_name='evaluations_houses')
+    comments = models.ManyToManyField(User, through='Comment', related_name='comments_houses')
     pub_date = models.DateTimeField('Added on', auto_now=False, auto_now_add=True)
     update = models.DateTimeField(auto_now=True, auto_now_add=False)
 

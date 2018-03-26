@@ -70,13 +70,13 @@
       <hr>
 
       <h2>Evaluations</h2>
-
+      
       <div class="rating-block">
-        <h3>Average user rating</h3>
+        <h3>Average user rating (<span id="vote_count">{{ vote_count }}</span> evaluation{{ vote_count|pluralize }})</h3>
         <h4 class="bold padding-bottom-7"><span id="average">
           <!-- There's an eval -->
           {% if average_evaluation %}
-            {{ average_evaluation }}
+            {{ average_evaluation.stars }}
           {% else %}
             No rating yet
           {% endif %}
@@ -115,11 +115,10 @@
       {% endif %}
 
       <h3>Comment list</h3>
-      {% for comment in comments %}
-
+      {% for comment in house.comment_set.all %}
         <div class="card">
           <div class="card-header">
-            {{ comment.user }}
+            {{ comment.user.username }}
           </div>
           <div class="card-body">
             <p class="card-text">{{ comment.body }}</p>

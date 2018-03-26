@@ -48,6 +48,7 @@ $('.rating-block button').on('click', function(event){
 
         // Updates average stars
         $('#average').html(response['average_evaluation']);
+        $('#vote_count').html(response['vote_count']);
 
       }
 
