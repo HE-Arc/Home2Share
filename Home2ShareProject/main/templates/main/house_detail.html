@@ -73,6 +73,7 @@
             <div class="card-body">
               <h3 class="card-title">House's Owner</h3>
               <p class="card-text"><a href="{% url 'profile' house.user.username %}">{{ house.user.username }}</a> <br> <a href="mailto:{{ house.user.email }}" >{{ house.user.email }}</a></p>
+              <p><a href="mailto:{{ house.user.email }}&subject={{ house.name|urlencode }}%20reservation" class="btn btn-success btn-lg btn-block">Contact house's owner</a></p>
             </div>
           </div>
         </div>
