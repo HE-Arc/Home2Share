@@ -148,6 +148,7 @@ else:
     EMAIL_USER = ''
     EMAIL_PASSWORD = ''
 
+DEFAULT_FROM_EMAIL = 'Webmaster@Home2Share.com'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
