@@ -1,19 +1,29 @@
 {% extends '../main/base.html' %}
 {% load staticfiles %}
+{% load bootstrap4 %}
+
+{% block title %}Profile{% endblock %}
 
 {% block content %} 
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1 class="display-4">Profile</h1>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Name</h3>
+          <p class="card-text">{{ user.username }}</p>
+          <hr>
+          <h3 class="card-title">Mail</h3>
+          <p class="card-text">{{ user.email }}</p>
+        </div>
+      </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <h1 class="display-4">Profile : {{ user.username }}</h1>
-    <hr/>
-    <ul>
-      <li>{{ user.username }}</li>
-      <li>{{ user.email }}</li>
-    </ul>
-    {% if house.user.username == request.user.username %}
-    <a href="{% url 'user-update' user.username %}" class="btn btn-success btn-sm">Update</a>
-    {% endif %}
+    </div>
   </div>
+  <hr>
+  {% if user.username == request.user.username %}
+  <a href="{% url 'user-update' user.username %}" class="btn btn-success btn-sm">Update</a>
+  {% endif %}
 </div>
 {% endblock %}

@@ -2,6 +2,15 @@
 {% load staticfiles %}
 {% load bootstrap4 %}
 
+
+{% block title %}
+{% if view.name == "create" %}
+  Sign up
+{% else %}
+  Edit profile
+{% endif %}
+{% endblock %}
+
 {% block content %} 
 
 <div class="row">
