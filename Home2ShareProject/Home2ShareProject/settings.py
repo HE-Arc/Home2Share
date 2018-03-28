@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(ep+2e@(y494t*m^bb@q#22_(%h#r=i@9c41$lq7sg0w=3g6*^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['home2share.srvz-webapp.he-arc.ch', 'localhost']
 
@@ -138,7 +138,15 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
 #email in console
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+if DEBUG :
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    SMTP_HOST=smtp
+    SMTP_PORT=1025
+    SMTP_USER=
+    SMTP_PASSWORD=
 
 
 # Static files (CSS, JavaScript, Images)
