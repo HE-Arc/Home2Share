@@ -83,7 +83,7 @@ class UserCreateView(generic.CreateView):
             'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),
             'token': account_activation_token.make_token(user),
         })
-        user.email_user(subject, message)
+        user.email_user(subject, message,from_email='Webmaster@Home2Share.com')
         return super().form_valid(form)
 
 

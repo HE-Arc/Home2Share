@@ -143,10 +143,10 @@ if DEBUG :
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    SMTP_HOST = 'smtp'
-    SMTP_PORT = 1025
-    SMTP_USER = ''
-    SMTP_PASSWORD = ''
+    EMAIL_HOST = 'smtp'
+    EMAIL_PORT = 1025
+    EMAIL_USER = ''
+    EMAIL_PASSWORD = ''
 
 
 # Static files (CSS, JavaScript, Images)
