@@ -27,9 +27,15 @@
       </ul>
 
       <form class="form-inline my-2 my-lg-0" action="/search" method="get">
-        <input name="q" id="search_form" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <input name="name" id="search_form" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="material-icons">search</i>Search</button>
       </form>
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'advanced_search' %}"><i class="material-icons">youtube_searched_for</i> Adanced Search</a>
+        </li>
+      </ul>
 
       <ul class="navbar-nav ml-auto">
         {% if request.user.is_authenticated %}

@@ -1,11 +1,14 @@
 from django.urls import path , include
 
 import main.views as views
+from django_filters.views import FilterView
 
 # Used for the local image hack
 from django.conf import settings
 from django.views.static import serve
 from django.conf.urls import url
+from main.filters import HouseFilter
+
 
 
 urlpatterns = [
@@ -26,7 +29,8 @@ urlpatterns = [
     path('house/<slug>/', views.HouseDetailView.as_view(), name='house-detail'),
     path('account_activation_sent/',views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>',views.activate, name='activate'),
-    path('search',views.SearchHouseView.as_view(), name='search_house')
+    path('search',views.SearchHouseView.as_view(), name='search_house'),
+    path('advanced_search',FilterView.as_view(filterset_class=HouseFilter,template_name='main/search_form.html'), name='advanced_search')
 ]
 
 # For media working in localhost

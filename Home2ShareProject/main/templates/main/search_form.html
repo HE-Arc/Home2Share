@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% load bootstrap4 %}
+{% load house_tags %}
+
+{% block title %}
+  Search for a House
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Search for a house</h1>
+  <hr>
+  <form method="get" enctype="multipart/form-data">
+    {% bootstrap_form filter.form layout='horizontal' %}
+    {% buttons %}
+        <button value="save" type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
+  </form>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+  			{% show_house_list filter.qs request.user.username multiline=True user_buttons=False%}
+  </div>
+</div>
+{% endblock %}

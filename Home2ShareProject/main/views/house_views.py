@@ -10,6 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
+
 import json
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -177,13 +178,13 @@ class SearchHouseView(generic.ListView):
 
     def get_queryset(self):
         try:
-            name = self.request.GET.get('q')
+            name = self.request.GET.get('name')
         except:
             name = ''
         if (name != ''):
             object_list = self.model.objects.filter(name__icontains = name)
         else:
-            object_list = self.model.objects.all()
+            object_list = []
         return object_list
 
 def update_rating(request):
