@@ -6,19 +6,19 @@ def index(request):
     context = {}
 
     # Recent houses
-    qs = House.objects.order_by('-pub_date')[:3]
+    qs = House.objects.order_by('-pub_date').select_related('user')[:3]
     context['recent_houses'] = qs
 
     # Random houses
-    qs = House.objects.order_by('?')[:3]
+    qs = House.objects.order_by('?').select_related('user')[:3]
     context['random_houses'] = qs
 
     # Best rated Houses
-    qs = House.objects.annotate(average_stars=Avg('evaluation__stars')).order_by('-average_stars')[:3]
+    qs = House.objects.annotate(average_stars=Avg('evaluation__stars')).order_by('-average_stars').select_related('user')[:3]
     context['best_rated_houses'] = qs
 
     # Most commented Houses
-    qs = House.objects.annotate(num_comments=Count('comments')).order_by('-num_comments')[:3]
+    qs = House.objects.annotate(num_comments=Count('comments')).order_by('-num_comments').select_related('user')[:3]
     context['most_commented_houses'] = qs
 
     return render(request, 'index.html', context)
