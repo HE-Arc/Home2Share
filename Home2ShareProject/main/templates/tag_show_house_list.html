@@ -5,13 +5,13 @@
   <!-- Creating a column for each treasure panel -->
   <div class="col-md-4">
     <div class="card" style="width: 21rem;">
-      <img class="card-img-top" src="{{ house.image.url }}" alt="Card image cap">
+      <a href="{% url 'house-detail' house.slug_name %}"><img class="card-img-top" src="{{ house.image.url }}" alt="Card image cap"></a>
       <div class="card-body">
         <h5 class="card-title">{{ house.name }}</h5>
         <p class="card-text"><h6>{{ house.city}}, {{house.country}}</strong></h6>{{ house.description|truncatewords:50 }}</p>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
           <div class="btn-group mr-2" role="group" aria-label="First group">
-            <a href="/house/{{house.slug_name}}/" class="btn btn-primary">Details</a>
+            <a href="{% url 'house-detail' house.slug_name %}" class="btn btn-primary">Details</a>
           </div>
           {% if user_buttons and house.user.username == logged_user %}
           <div class="btn-group mr-2" role="group" aria-label="Second group">

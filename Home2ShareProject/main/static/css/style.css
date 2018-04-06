@@ -52,7 +52,7 @@
 
 main{
   padding-top:80px;
-  padding-bottom:20px;
+  padding-bottom:80px;
 }
 
 #search_form{
@@ -78,6 +78,10 @@ main{
 
 .clear{
   clear:both;
+}
+
+.h-title-homepage{
+  margin-top: 40px;
 }
 
 /* Button / Icon style

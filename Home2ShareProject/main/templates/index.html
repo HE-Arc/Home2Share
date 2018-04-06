@@ -8,15 +8,15 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<h1 class="display-4">Homepage</h1>
+			<h1 class="display-4">Welcome to Home2Share</h1>
 			<hr/>
-			<h2>Recently added houses</h2>
+			<h2 class="h-title-homepage">Recently added houses</h2>
 			{% show_house_list recent_houses request.user.username multiline=False user_buttons=False%}
-			<h2>Random houses</h2>
+			<h2 class="h-title-homepage">Random houses</h2>
 			{% show_house_list random_houses request.user.username multiline=False user_buttons=False%}
-			<h2>Best rated houses</h2>
+			<h2 class="h-title-homepage">Best rated houses</h2>
 			{% show_house_list best_rated_houses request.user.username multiline=False user_buttons=False%}
-			<h2>Most commented houses</h2>
+			<h2 class="h-title-homepage">Most commented houses</h2>
 			{% show_house_list most_commented_houses request.user.username multiline=False user_buttons=False%}
 		</div>
 	</div>

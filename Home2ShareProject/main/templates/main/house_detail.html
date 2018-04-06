@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load bootstrap4 %}
 
-{% block title %}Details | {{ house.name }}{% endblock %}
+{% block title %}House | {{ house.name }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -87,7 +87,7 @@
         <h3>Average user rating (<span id="vote_count">{{ vote_count }}</span> evaluation{{ vote_count|pluralize }})</h3>
         <h4 class="bold padding-bottom-7"><span id="average">
           <!-- There's an eval -->
-          {% if average_evaluation %}
+          {% if average_evaluation.stars %}
             {{ average_evaluation.stars }}
           {% else %}
             No rating yet
@@ -130,7 +130,7 @@
       {% for comment in house.comment_set.all %}
         <div class="card">
           <div class="card-header">
-            {{ comment.user.username }}
+            By <a href="{% url 'profile' house.user.username %}">{{ comment.user.username }}</a> - <small>Last modification on {{ comment.last_modif_date }}</small>
           </div>
           <div class="card-body">
             <p class="card-text">{{ comment.body }}</p>

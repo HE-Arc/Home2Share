@@ -9,14 +9,21 @@
   <div class="row">
     <div class="col-md-12">
 
-      <h1 class="display-4">{% if view.name == 'profile-house-list' %}Your houses{% else %}All the houses{% endif %}</h1>
-      <p class="lead text-muted">{% if view.name == 'profile-house-list' %}Houses that are yours{% else %}A list of our magnificent houses to share.{% endif %}</p>
+      {% if view.name == 'profile-house-list' %}
+        <h1 class="display-4">{% if username == request.user.username %}Your houses{% else %}{{ username }}'s houses{% endif %}</h1>
+        <p class="lead text-muted">{% if username == request.user.username %}Houses that are yours{% else %}The list of {{ username }}'s magnificent houses.{% endif %}</p>
+      {% else %}
+        <h1 class="display-4">All the houses</h1>
+        <p class="lead text-muted">A list of our magnificent houses to share.</p>
+      {% endif %}
 
       <hr/>
       {% if view.name == 'profile-house-list' %}
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-          <a href="{% url 'house-new' user.username %}" class="btn btn-success btn-sm"><i class="material-icons">add</i>Add a new house</a>
-        </div>
+        {% if username == request.user.username %}
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <a href="{% url 'house-new' user.username %}" class="btn btn-success btn-sm"><i class="material-icons">add</i>Add a new house</a>
+          </div>
+        {% endif %}
   		  {% show_house_list house_list request.user.username multiline=True user_buttons=True%}
       {% else %}
   			{% show_house_list house_list request.user.username multiline=True user_buttons=False%}

@@ -1,5 +1,6 @@
 var enabled_buttons = null;
 
+// To dynamically change style of stars when hovering and go back to same state after mouse out
 $('.rating-block button').hover( function(event){
   enabled_buttons = $('.rating-block button.btn-warning');
   $('.rating-block button').removeClass('btn-warning btn-grey');
@@ -21,7 +22,8 @@ $('.rating-block button').on('click', function(event){
   var button = $(this);
   var stars = button.attr('data-value');
   enabled_buttons = null;
-  // alert(button.attr('data-value'));
+
+  // Ajax request
   $.ajax({
     type: frm.attr('method'),
     url: frm.attr('action'),
@@ -32,7 +34,7 @@ $('.rating-block button').on('click', function(event){
       csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
     },
     success : function(response){
-      // alert('ajax good ' + response);
+
       if(response['change_validated']){
 
         // Updates corresponding class to button
