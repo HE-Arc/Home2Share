@@ -88,7 +88,7 @@
         <h4 class="bold padding-bottom-7"><span id="average">
           <!-- There's an eval -->
           {% if average_evaluation.stars %}
-            {{ average_evaluation.stars }}
+            {{ average_evaluation.stars|floatformat:"1" }}
           {% else %}
             No rating yet
           {% endif %}
@@ -127,7 +127,7 @@
       {% endif %}
 
       <h3>Comment list</h3>
-      {% for comment in house.comment_set.all %}
+      {% for comment in house.comment_set.all|dictsortreversed:"last_modif_date" %}
         <div class="card">
           <div class="card-header">
             By <a href="{% url 'profile' house.user.username %}">{{ comment.user.username }}</a> - <small>Last modification on {{ comment.last_modif_date }}</small>
