@@ -4,6 +4,7 @@ from django.forms import MultiWidget
 import django_filters
 
 class HouseFilter(django_filters.FilterSet):
+    """define the advanced research page"""
     country = django_filters.MultipleChoiceFilter(choices=House.COUNTRIES,widget=forms.CheckboxSelectMultiple)
     price_between = django_filters.RangeFilter(name='price')
     class Meta:
